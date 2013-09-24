@@ -18,10 +18,11 @@ Usage
 baidupan.py [-h] [--resume] url
 ```
 
-For example, the url is `http://pan.baidu.com/share/link?shareid=568668&uk=2987247908`:
+Both url schemes are supported, for example:
 
 ```bash
 python baidupan.py "http://pan.baidu.com/share/link?shareid=568668&uk=2987247908"
+python baidupan.py http://pan.baidu.com/s/1gN0mU
 ```
 
 ### --resume
@@ -32,6 +33,7 @@ For example:
 
 ```bash
 python baidupan.py "http://pan.baidu.com/share/link?shareid=568668&uk=2987247908" --resume
+python baidupan.py http://pan.baidu.com/s/1gN0mU --resume
 ```
 
 Note
@@ -62,10 +64,11 @@ wget https://raw.github.com/billzhong/baidupan/master/baidupan.py
 baidupan.py [-h] [--resume] url
 ```
 
-例如，地址是 `http://pan.baidu.com/share/link?shareid=568668&uk=2987247908` ：
+支持两种 URL 格式，例如：
 
 ```bash
 python baidupan.py "http://pan.baidu.com/share/link?shareid=568668&uk=2987247908"
+python baidupan.py http://pan.baidu.com/s/1gN0mU
 ```
 
 ### --resume
@@ -76,6 +79,7 @@ python baidupan.py "http://pan.baidu.com/share/link?shareid=568668&uk=2987247908
 
 ```bash
 python baidupan.py "http://pan.baidu.com/share/link?shareid=568668&uk=2987247908" --resume
+python baidupan.py http://pan.baidu.com/s/1gN0mU --resume
 ```
 
 备注
