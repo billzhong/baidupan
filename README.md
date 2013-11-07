@@ -22,7 +22,7 @@ Both url schemes are supported, for example:
 
 ```bash
 python baidupan.py "http://pan.baidu.com/share/link?shareid=568668&uk=2987247908"
-python baidupan.py http://pan.baidu.com/s/1gN0mU
+python baidupan.py http://pan.baidu.com/s/1mnEt9
 ```
 
 ### --resume
@@ -33,7 +33,7 @@ For example:
 
 ```bash
 python baidupan.py "http://pan.baidu.com/share/link?shareid=568668&uk=2987247908" --resume
-python baidupan.py http://pan.baidu.com/s/1gN0mU --resume
+python baidupan.py http://pan.baidu.com/s/1mnEt9 --resume
 ```
 
 Note
@@ -68,7 +68,7 @@ baidupan.py [-h] [--resume] url
 
 ```bash
 python baidupan.py "http://pan.baidu.com/share/link?shareid=568668&uk=2987247908"
-python baidupan.py http://pan.baidu.com/s/1gN0mU
+python baidupan.py http://pan.baidu.com/s/1mnEt9
 ```
 
 ### --resume
@@ -79,7 +79,7 @@ python baidupan.py http://pan.baidu.com/s/1gN0mU
 
 ```bash
 python baidupan.py "http://pan.baidu.com/share/link?shareid=568668&uk=2987247908" --resume
-python baidupan.py http://pan.baidu.com/s/1gN0mU --resume
+python baidupan.py http://pan.baidu.com/s/1mnEt9 --resume
 ```
 
 备注

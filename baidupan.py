@@ -34,8 +34,8 @@ if __name__ == '__main__':
     # use urllib2 to get html data
     try:
         request = urllib2.Request(args.url)
-        request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) \
-                            AppleWebKit/536.30.1 (KHTML, like Gecko) Version/6.0.5 Safari/536.30.1')
+        request.add_header('User-Agent', 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_3 like Mac OS X) \
+                            AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B329 Safari/8536.25')
         html = urllib2.urlopen(request).read()
     except:
         raise Exception('Please check the URL.')
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     try:
         m = re.search(r'\\"server_filename\\":\\\"(.+?)\\"', html)
         fn = m.group(1)
-        m = re.search(r'\\"dlink\\":\\\"(.*)\\"', html)
+        m = re.search(r'\\"dlink\\":\\\"(.*)\\"}]"\);', html)
         url = m.group(1).replace(r'\\', '')
     except:
         raise Exception('Cannot get the link data.')
