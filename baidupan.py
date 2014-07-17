@@ -27,7 +27,7 @@ if __name__ == '__main__':
     parser.add_argument('--resume', help='Resume getting a partially-downloaded file.', action='store_true')
     args = parser.parse_args()
 
-    # check the url contain vmail.com
+    # check the url contain pan.baidu.com
     if args.url.find('pan.baidu.com') == -1:
         raise Exception('URL must contain pan.baidu.com.')
 
