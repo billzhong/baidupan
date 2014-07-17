@@ -1,7 +1,7 @@
 BaiduPan Downloader
 ===================
 
-This script will fetch BaiduPan's real URL and call `wget` to download.
+This script will fetch BaiduPan's real download URL and call `wget` to download.
 
 GetIt
 -----
@@ -9,7 +9,7 @@ GetIt
 ###You need [python](http://www.python.org) to run this script.
 
 ```bash
-wget https://raw.github.com/billzhong/baidupan/master/baidupan.py
+wget https://github.com/billzhong/baidupan/raw/master/baidupan.py
 ```
 
 Usage
@@ -38,8 +38,8 @@ python baidupan.py http://pan.baidu.com/s/1mnEt9 --resume
 
 Note
 ----
-Only tested in `python 2.7.x` and `wget 1.14`.
-
+Only tested in `python 2.7.5` and `wget 1.15`.
+Only supported single share file without password.
 
 
 
@@ -54,7 +54,7 @@ Only tested in `python 2.7.x` and `wget 1.14`.
 需要 [Python](http://www.python.org) 环境。
 
 ```bash
-wget https://raw.github.com/billzhong/baidupan/master/baidupan.py
+wget https://github.com/billzhong/baidupan/raw/master/baidupan.py
 ```
 
 用法
@@ -84,5 +84,5 @@ python baidupan.py http://pan.baidu.com/s/1mnEt9 --resume
 
 备注
 ----
-仅在 `python 2.7.x` 和 `wget 1.14` 下测试。
-
+仅在 `python 2.7.5` 和 `wget 1.15` 下测试。
+只支持无密码的单个分享文件。

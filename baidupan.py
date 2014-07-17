@@ -2,15 +2,22 @@
 
 import argparse
 import urllib2
+import cookielib
+import json
 import re
 import distutils.spawn
 import subprocess
 
 
-# call wget to download
+UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.77.4 ' \
+     '(KHTML, like Gecko) Version/7.0.5 Safari/537.77.4'
+
+
+# call wget to download, inspired by xunlei-lixian@github
 def wget_download(download_url, file_name='', resume=False):
     wget_cmd = ['wget', download_url]
     if file_name != '':
+        wget_cmd.append('--user-agent="' + UA + '"')
         wget_cmd.append('-O')
         wget_cmd.append(file_name)
     if resume:
@@ -32,11 +39,11 @@ if __name__ == '__main__':
         raise Exception('URL must contain pan.baidu.com.')
 
     # use urllib2 to get html data
+    cookieJar = cookielib.CookieJar()
+    urlOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookieJar))
+    urlOpener.addheaders = [('User-agent', UA)]
     try:
-        request = urllib2.Request(args.url)
-        request.add_header('User-Agent', 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_3 like Mac OS X) \
-                            AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B329 Safari/8536.25')
-        html = urllib2.urlopen(request).read()
+        html = urlOpener.open(args.url).read()
     except:
         raise Exception('Please check the URL.')
 
@@ -44,17 +51,35 @@ if __name__ == '__main__':
     if html.find('<head>') == -1:
         raise Exception('Cannot get correct html page.')
 
-    # use regexp to search the link data
-    try:
-        m = re.search(r'\\"server_filename\\":\\\"(.+?)\\"', html)
-        fn = m.group(1)
-        m = re.search(r'\\"dlink\\":\\\"(.*)\\"}]"\);', html)
-        url = m.group(1).replace(r'\\', '')
-    except:
-        raise Exception('Cannot get the link data.')
+    # use regexp to search the data
+    m = re.search(r'\\"server_filename\\":\\\"(.+?)\\"', html)
+    fn = m.group(1)
+    m = re.search(r'\\"fs_id\\":(\d+),', html)
+    fs_id = m.group(1)
+    m = re.search(r'FileUtils.share_uk="(\d+)";', html)
+    share_uk = m.group(1)
+    m = re.search(r'FileUtils.share_id="(\d+)";', html)
+    share_id = m.group(1)
+    m = re.search(r'FileUtils.share_timestamp="(\d+)";', html)
+    share_timestamp = m.group(1)
+    m = re.search(r'FileUtils.share_sign="([0-9a-f]+)";', html)
+    share_sign = m.group(1)
+
+    # get real download link, inspired by pan-baidu-download@github
+    purl = 'http://pan.baidu.com/share/download?channel=chunlei&clienttype=0&web=1' \
+           '&uk=' + share_uk + \
+           '&shareid=' + share_id + \
+           '&timestamp=' + share_timestamp + \
+           '&sign=' + share_sign
+    pdata = 'fid_list=["' + fs_id + '"]'
+    jdata = json.load(urlOpener.open(purl, pdata))
+    if not jdata.get('errno'):
+        dlink = jdata.get('dlink').encode('utf-8')
+    else:
+        raise Exception('Cannot get download link. Please try again later.')
 
     # download file
     if args.resume:
-        wget_download(url, fn, True)
+        wget_download(dlink, fn, True)
     else:
-        wget_download(url, fn)
+        wget_download(dlink, fn)
