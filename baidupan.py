@@ -52,17 +52,19 @@ if __name__ == '__main__':
         raise Exception('Cannot get correct html page.')
 
     # use regexp to search the data
-    m = re.search(r'\\"server_filename\\":\\\"(.+?)\\"', html)
+    regexhtml = ur'"server_filename":"(.+?)"'
+    pattern = re.compile(regexhtml, re.UNICODE)
+    m = pattern.search(html)
     fn = m.group(1)
-    m = re.search(r'\\"fs_id\\":(\d+),', html)
+    m = re.search(r'"fs_id":(\d+),', html)
     fs_id = m.group(1)
-    m = re.search(r'FileUtils.share_uk="(\d+)";', html)
+    m = re.search(r'yunData.SHARE_UK = "(\d+)";'  , html, re.UNICODE)
     share_uk = m.group(1)
-    m = re.search(r'FileUtils.share_id="(\d+)";', html)
+    m = re.search(r'yunData.SHARE_ID = "(\d+)";'  , html, re.UNICODE)
     share_id = m.group(1)
-    m = re.search(r'FileUtils.share_timestamp="(\d+)";', html)
+    m = re.search(r'yunData.TIMESTAMP = "(\d+)";' , html, re.UNICODE)
     share_timestamp = m.group(1)
-    m = re.search(r'FileUtils.share_sign="([0-9a-f]+)";', html)
+    m = re.search(r'yunData.SIGN = "([0-9a-f]+)";', html, re.UNICODE)
     share_sign = m.group(1)
 
     # get real download link, inspired by pan-baidu-download@github
