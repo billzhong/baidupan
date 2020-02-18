@@ -1,8 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
-import urllib2
-import cookielib
+from urllib import request
+import urllib.error
+from http import cookiejar
 import json
 import re
 import distutils.spawn
@@ -22,7 +23,8 @@ def wget_download(download_url, file_name='', resume=False):
         wget_cmd.append(file_name)
     if resume:
         wget_cmd.append('-c')
-    assert distutils.spawn.find_executable(wget_cmd[0]), "Cannot find %s" % wget_cmd[0]
+    assert distutils.spawn.find_executable(wget_cmd[0]), "Cannot find " \
+                                                         f"{wget_cmd[0]}"
     exit_code = subprocess.call(wget_cmd)
     if exit_code != 0:
         raise Exception('Cannot call wget to download.')
@@ -31,7 +33,8 @@ def wget_download(download_url, file_name='', resume=False):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='BaiduPan Downloader')
     parser.add_argument('url', help='BaiduPan URL')
-    parser.add_argument('--resume', help='Resume getting a partially-downloaded file.', action='store_true')
+    parser.add_argument('--resume', action='store_true',
+                        help='Resume getting a partially-downloaded file.')
     args = parser.parse_args()
 
     # check the url contain pan.baidu.com
@@ -39,43 +42,45 @@ if __name__ == '__main__':
         raise Exception('URL must contain pan.baidu.com.')
 
     # use urllib2 to get html data
-    cookieJar = cookielib.CookieJar()
-    urlOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookieJar))
+    cookieJar = cookiejar.CookieJar()
+    urlOpener = request.build_opener(request.HTTPCookieProcessor(cookieJar))
     urlOpener.addheaders = [('User-agent', UA)]
+    print('Getting html data...')
     try:
-        html = urlOpener.open(args.url).read()
-    except:
+        html = urlOpener.open(args.url).read().decode()
+    except urllib.error.URLError or urllib.error.HTTPError:
         raise Exception('Please check the URL.')
 
     # check the html data contain <head> keyword
-    if html.find('<head>') == -1:
-        raise Exception('Cannot get correct html page.')
+    assert '<head>' in html, 'Cannot get correct html page.'
 
     # use regexp to search the data
-    regexhtml = ur'"server_filename":"(.+?)"'
+    regexhtml = r'"server_filename":"(.+?)"'
     pattern = re.compile(regexhtml, re.UNICODE)
     m = pattern.search(html)
     fn = m.group(1)
     m = re.search(r'"fs_id":(\d+),', html)
     fs_id = m.group(1)
-    m = re.search(r'yunData.SHARE_UK = "(\d+)";'  , html, re.UNICODE)
+    m = re.search(r'yunData.SHARE_UK = "(\d+)";', html, re.UNICODE)
     share_uk = m.group(1)
-    m = re.search(r'yunData.SHARE_ID = "(\d+)";'  , html, re.UNICODE)
+    m = re.search(r'yunData.SHARE_ID = "(\d+)";', html, re.UNICODE)
     share_id = m.group(1)
-    m = re.search(r'yunData.TIMESTAMP = "(\d+)";' , html, re.UNICODE)
+    m = re.search(r'yunData.TIMESTAMP = "(\d+)";', html, re.UNICODE)
     share_timestamp = m.group(1)
     m = re.search(r'yunData.SIGN = "([0-9a-f]+)";', html, re.UNICODE)
     share_sign = m.group(1)
 
     # get real download link, inspired by pan-baidu-download@github
-    purl = 'http://pan.baidu.com/share/download?channel=chunlei&clienttype=0&web=1' \
+    purl = 'http://pan.baidu.com/share/download?channel=chunlei&clienttype=0' \
+           '&web=1' \
            '&uk=' + share_uk + \
            '&shareid=' + share_id + \
            '&timestamp=' + share_timestamp + \
            '&sign=' + share_sign
     pdata = 'fid_list=["' + fs_id + '"]'
+    pdata = pdata.encode('utf-8')
     jdata = json.load(urlOpener.open(purl, pdata))
-    if not jdata.get('errno'):
+    if not jdata.get('errno') and jdata.get('dlink') is not None:
         dlink = jdata.get('dlink').encode('utf-8')
     else:
         raise Exception('Cannot get download link. Please try again later.')
