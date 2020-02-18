@@ -38,7 +38,7 @@ python baidupan.py http://pan.baidu.com/s/1mnEt9 --resume
 
 Note
 ----
-Only tested in `python 2.7.5` and `wget 1.15`.
+Tested in `python 3.7` and `wget 1.15`.
 
 Only supported single share file without password.
 
@@ -85,6 +85,6 @@ python baidupan.py http://pan.baidu.com/s/1mnEt9 --resume
 
 备注
 ----
-仅在 `python 2.7.5` 和 `wget 1.15` 下测试。
+仅在 `python 3.7` 和 `wget 1.15` 下测试。
 
 只支持无密码的单个分享文件。
